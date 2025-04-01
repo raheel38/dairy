@@ -1,19 +1,25 @@
+import 'package:diary/screens/blog.dart';
+import 'package:diary/screens/homeScreen.dart';
+import 'package:diary/screens/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+// This is the main HomeScreen that hosts the navigation
+class FirstScreen extends StatefulWidget {
+  const FirstScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<FirstScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<FirstScreen> {
   int _selectedIndex = 0;
 
-  static const List<Widget> _widgetOptions = <Widget>[
-    Center(child: Text('Home Page', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Blog Page', style: TextStyle(fontSize: 24))),
-    Center(child: Text('Profile Page', style: TextStyle(fontSize: 24))),
+  // List of pages/screens to display
+  final List<Widget> _pages = [
+    const Homescreen(),
+    const BlogScreen(),
+    const ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -26,9 +32,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My App'),
+        title: const Text('Notie'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            icon: const Icon(Icons.exit_to_app),
+          ),
+        ],
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -45,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
         onTap: _onItemTapped,
       ),
     );
