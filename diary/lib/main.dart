@@ -1,4 +1,5 @@
 import 'package:diary/screens/auth.dart';
+import 'package:diary/screens/homeScreen.dart';
 import 'package:diary/screens/home.dart';
 import 'package:diary/screens/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
               return const SplashScreen();
             }
             if (snapshot.hasData) {
-              return const HomeScreen();
+              return const FirstScreen();
             }
             return const AuthScreen();
           }),

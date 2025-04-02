@@ -17,7 +17,7 @@ class _HomeScreenState extends State<FirstScreen> {
 
   // List of pages/screens to display
   final List<Widget> _pages = [
-    const Homescreen(),
+    const Homeescreen(),
     const BlogScreen(),
     const ProfileScreen(),
   ];
@@ -33,14 +33,6 @@ class _HomeScreenState extends State<FirstScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notie'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              FirebaseAuth.instance.signOut();
-            },
-            icon: const Icon(Icons.exit_to_app),
-          ),
-        ],
       ),
       body: IndexedStack(
         index: _selectedIndex,
