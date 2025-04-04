@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:diary/screens/addEntry.dart';
 
 // Model for blog entries
 class BlogEntry {
@@ -7,6 +9,24 @@ class BlogEntry {
   final String date;
 
   BlogEntry({required this.title, required this.content, required this.date});
+
+  // Convert BlogEntry to a map for Firestore
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'content': content,
+      'date': date,
+    };
+  }
+
+  // Create BlogEntry from Firestore data
+  factory BlogEntry.fromMap(Map<String, dynamic> map) {
+    return BlogEntry(
+      title: map['title'] ?? '',
+      content: map['content'] ?? '',
+      date: map['date'] ?? '',
+    );
+  }
 }
 
 class BlogScreen extends StatefulWidget {
@@ -17,8 +37,26 @@ class BlogScreen extends StatefulWidget {
 }
 
 class _BlogScreenState extends State<BlogScreen> {
-  // List of blog entries
   final List<BlogEntry> _entries = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEntries(); // Load blog entries from Firestore on start
+  }
+
+  // Fetch blog entries from Firestore
+  Future<void> _loadEntries() async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('blog_entries').get();
+
+    final entries =
+        snapshot.docs.map((doc) => BlogEntry.fromMap(doc.data())).toList();
+
+    setState(() {
+      _entries.addAll(entries);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +122,16 @@ class _BlogScreenState extends State<BlogScreen> {
             MaterialPageRoute(builder: (context) => const AddEntryScreen()),
           );
 
-          // Check if we received a result (new entry)
+          // If a new entry is returned, add to list and Firestore
           if (result != null && result is BlogEntry) {
             setState(() {
               _entries.add(result);
             });
+
+            // Save the new entry to Firestore
+            await FirebaseFirestore.instance
+                .collection('blog_entries')
+                .add(result.toMap());
           }
         },
         child: const Icon(Icons.add),
@@ -126,134 +169,5 @@ class _BlogScreenState extends State<BlogScreen> {
         ],
       ),
     );
-  }
-}
-
-// Screen for adding a new entry
-class AddEntryScreen extends StatefulWidget {
-  const AddEntryScreen({super.key});
-
-  @override
-  State<AddEntryScreen> createState() => _AddEntryScreenState();
-}
-
-class _AddEntryScreenState extends State<AddEntryScreen> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _contentController = TextEditingController();
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _contentController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('New Entry'),
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Save entry and return to previous screen
-              if (_titleController.text.isNotEmpty ||
-                  _contentController.text.isNotEmpty) {
-                final newEntry = BlogEntry(
-                  title: _titleController.text.isNotEmpty
-                      ? _titleController.text
-                      : 'Untitled',
-                  content: _contentController.text,
-                  date: _getCurrentDate(),
-                );
-                Navigator.pop(context, newEntry);
-              } else {
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Date display
-            Container(
-              alignment: Alignment.centerLeft,
-              margin: const EdgeInsets.only(bottom: 16),
-              child: Text(
-                _getCurrentDate(),
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
-              ),
-            ),
-
-            // Title field
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                hintText: 'Title',
-                border: OutlineInputBorder(),
-              ),
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Content field - Expanded to fill available space
-            Expanded(
-              child: TextField(
-                controller: _contentController,
-                decoration: const InputDecoration(
-                  hintText: 'Start writing your thoughts...',
-                  border: OutlineInputBorder(),
-                  alignLabelWithHint: true,
-                ),
-                maxLines: null,
-                expands: true,
-                textAlignVertical: TextAlignVertical.top,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getCurrentDate() {
-    final now = DateTime.now();
-    return '${now.day}/${now.month}/${now.year} - ${_getWeekday(now.weekday)}';
-  }
-
-  String _getWeekday(int weekday) {
-    switch (weekday) {
-      case 1:
-        return 'Monday';
-      case 2:
-        return 'Tuesday';
-      case 3:
-        return 'Wednesday';
-      case 4:
-        return 'Thursday';
-      case 5:
-        return 'Friday';
-      case 6:
-        return 'Saturday';
-      case 7:
-        return 'Sunday';
-      default:
-        return '';
-    }
   }
 }
