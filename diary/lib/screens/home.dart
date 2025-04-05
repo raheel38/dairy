@@ -1,7 +1,7 @@
 import 'package:diary/screens/blog.dart';
 import 'package:diary/screens/homeScreen.dart';
 import 'package:diary/screens/profile.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 // This is the main HomeScreen that hosts the navigation

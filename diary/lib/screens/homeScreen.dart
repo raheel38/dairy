@@ -239,6 +239,17 @@ class Homeescreen extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildMoodButton(context, '😊', 'Happy'),
+            _buildMoodButton(context, '😐', 'Neutral'),
+            _buildMoodButton(context, '😔', 'Sad'),
+            _buildMoodButton(context, '😡', 'Angry'),
+            _buildMoodButton(context, '😴', 'Tired'),
+          ],
+        ),
       ],
     );
   }
