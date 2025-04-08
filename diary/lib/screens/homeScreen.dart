@@ -1,4 +1,6 @@
+import 'package:diary/widgets/quoteCard.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class Homeescreen extends StatelessWidget {
   const Homeescreen({super.key});
@@ -77,12 +79,12 @@ class Homeescreen extends StatelessWidget {
           const SizedBox(height: 30),
 
           // Daily tip section
-          _buildTipCard(context),
+          QuoteCard(),
 
           const SizedBox(height: 30),
 
           // Mood tracker section
-          _buildMoodTrackerSection(context),
+          // _buildMoodTrackerSection(context),
 
           const SizedBox(height: 20),
         ],
@@ -192,67 +194,31 @@ class Homeescreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTipCard(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).primaryColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.lightbulb_outline,
-                color: Theme.of(context).primaryColor,
-              ),
-              const SizedBox(width: 8),
-              const Text(
-                'Tip of the day',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            'Try to write for at least 5 minutes each day to build a consistent journaling habit.',
-            style: TextStyle(fontSize: 14),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMoodTrackerSection(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'How are you feeling today?',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildMoodButton(context, '😊', 'Happy'),
-            _buildMoodButton(context, '😐', 'Neutral'),
-            _buildMoodButton(context, '😔', 'Sad'),
-            _buildMoodButton(context, '😡', 'Angry'),
-            _buildMoodButton(context, '😴', 'Tired'),
-          ],
-        ),
-      ],
-    );
-  }
+  // Widget _buildMoodTrackerSection(BuildContext context) {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       const Text(
+  //         'How are you feeling today?',
+  //         style: TextStyle(
+  //           fontSize: 18,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //       const SizedBox(height: 16),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //         children: [
+  //           _buildMoodButton(context, '😊', 'Happy'),
+  //           _buildMoodButton(context, '😐', 'Neutral'),
+  //           _buildMoodButton(context, '😔', 'Sad'),
+  //           _buildMoodButton(context, '😡', 'Angry'),
+  //           _buildMoodButton(context, '😴', 'Tired'),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
 
   Widget _buildMoodButton(BuildContext context, String emoji, String label) {
     return InkWell(
