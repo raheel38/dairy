@@ -1,6 +1,7 @@
 import 'package:diary/screens/blog.dart';
 import 'package:diary/screens/homeScreen.dart';
 import 'package:diary/screens/profile.dart';
+import 'package:diary/screens/todolist.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,6 +19,7 @@ class _HomeScreenState extends State<FirstScreen> {
   // List of pages/screens to display
   final List<Widget> _pages = [
     const Homeescreen(),
+    // const TodoListScreen(),
     const BlogScreen(),
     const ProfileScreen(),
   ];
@@ -44,6 +46,10 @@ class _HomeScreenState extends State<FirstScreen> {
             icon: Icon(Icons.home),
             label: 'Home',
           ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.check),
+          //   label: 'Todo',
+          // ),
           BottomNavigationBarItem(
             icon: Icon(Icons.article),
             label: 'Blog',
